@@ -37,7 +37,15 @@ const server = net.createServer((socket) => {
         } 
         else {
             if(message=="/list"){
-                socket.write(`Utilisateurs en ligne : ${utilisateurs}\n\r`);
+              var i=1;
+             // Utilisateurs en ligne :
+              utilisateurs.forEach((user)=>{
+
+                socket.write(`# ${i} ${user}\n\r`);
+                i++;
+
+              })
+                
                 
                 
               }else{
