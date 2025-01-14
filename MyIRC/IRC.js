@@ -1,3 +1,4 @@
+const { write } = require('fs');
 const net = require('net');
 
 const clients = [];
@@ -38,17 +39,32 @@ const server = net.createServer((socket) => {
         else {
             if(message=="/list"){
               var i=1;
-             // Utilisateurs en ligne :
               utilisateurs.forEach((user)=>{
 
                 socket.write(`# ${i} ${user}\n\r`);
                 i++;
 
-              })
+              })              
+  
                 
-                
-                
-              }else{
+              }
+              else if(message.startsWith('/whisper')) {
+               var text = message;
+                text=text.replaceAll("/whisper ","");
+                console.log(`user ${text}`);
+                let tab = text.split(" ")
+                let user=tab[0];
+                let finalmsg=text.replaceAll(user,"");
+                console.log(`msg ${finalmsg}`);
+                text.trimStart();
+                if(utilisateurs.indexOf(user)>-1)
+                {clients[utilisateurs.indexOf(user)].write(`${username} : ${finalmsg}\n\r`);}
+                else
+                 socket.write(`user ${user} n'existe pas.\n\r`);
+  
+  
+               }
+              else{
                 
                 broadcast(`${username}: ${message}`, socket);
               }
